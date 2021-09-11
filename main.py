@@ -3,20 +3,13 @@ from discord.ext import commands
 from random_user_agent.user_agent import UserAgent
 from random_user_agent.params import SoftwareName, OperatingSystem, HardwareType
 import random
-import asyncio
-
-
 import datetime
 import sys
 import os
-
 from time import sleep
 import requests
 from random import randint
-#from cogs.afk import AFK
-
 import json
-
 
 
 
@@ -514,8 +507,15 @@ async def my_command(ctx, *, arg):
 @client.command()
 @commands.check(is_owner)
 async def botinfo(ctx):
+    proxie_list = []
 
 
+    with open("https.txt", "r") as f:
+        for proxy in f.readlines():
+            proxie_list.append(proxy.replace("\n", ""))
+    proxies = {
+      'https': random.choice(proxie_list)
+    }
     url = "https://request-header-parser-microservice.freecodecamp.rocks/api/whoami"
     software_names = [SoftwareName.FIREFOX.value]
     operating_systems = [OperatingSystem.WINDOWS.value, OperatingSystem.LINUX.value]   
@@ -533,9 +533,12 @@ async def botinfo(ctx):
     }
 
 
-    r = requests.get(url, headers=headers)
-    ipinfo = json.loads(r.text)    
+    r = requests.get(url, headers=headers, proxies=proxies, timeout=5)
+    ipinfo = json.loads(r.text) 
+    print(r.text)   
+    print (ipinfo)
     print(r.json())
+    verify = False
     embed = discord.Embed(color=(000000))
     embed.add_field(name="Bot IP", value=ipinfo['ipaddress'], inline=True)
     embed.add_field(name="Bot User Agent", value=ipinfo['software'], inline=True)
@@ -547,7 +550,7 @@ async def rando(ctx):
 
 
     software_names = [SoftwareName.EDGE.value, SoftwareName.CHROME.value, SoftwareName.ANDROID.value, SoftwareName.CHROMIUM.value, SoftwareName.FIREFOX.value, SoftwareName.OPERA.value]
-    operating_systems = [OperatingSystem.IOS.value, OperatingSystem.ANDROID.value]   
+    operating_systems = [OperatingSystem.IOS.value, OperatingSystem.ANDROID.value, OperatingSystem.WINDOWS.value, OperatingSystem.LINUX.value]   
  
     hardware_types = [HardwareType.MOBILE.value, HardwareType.SERVER.value, HardwareType.COMPUTER.value]    
     user_agent_rotator = UserAgent(software_names=software_names, operating_systems=operating_systems,hardware_types=hardware_types, limit=100)
