@@ -510,7 +510,7 @@ async def botinfo(ctx):
     proxie_list = []
 
 
-    with open("https.txt", "r") as f:
+    with open("https.txt", "r") as f:                   #USE HTTPS PROXIES ONLY
         for proxy in f.readlines():
             proxie_list.append(proxy.replace("\n", ""))
     proxies = {
