@@ -1,4 +1,4 @@
-# 6ix-Bot-Source
+#  I QUIT PYTHON
 A bot i made for a dead com server lol it gets updated daily etc 
 
 
